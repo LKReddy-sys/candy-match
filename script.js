@@ -14,6 +14,7 @@ let score = 0;
 let timeLeft = 60;
 let timerInterval;
 let colorBeingDragged, colorBeingReplaced, squareIdBeingDragged, squareIdBeingReplaced;
+let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
 
 function randomCandy() {
   return candyColors[Math.floor(Math.random() * candyColors.length)];
@@ -61,6 +62,40 @@ function dragEnd() {
   } else {
     squares[squareIdBeingDragged].className = colorBeingDragged;
     squares[squareIdBeingReplaced].className = colorBeingReplaced;
+  }
+}
+
+function handleTouchStart(e) {
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  squareIdBeingDragged = parseInt(e.target.id);
+  colorBeingDragged = e.target.className;
+}
+
+function handleTouchEnd(e) {
+  const touch = e.changedTouches[0];
+  touchEndX = touch.clientX;
+  touchEndY = touch.clientY;
+  const dx = touchEndX - touchStartX;
+  const dy = touchEndY - touchStartY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  if (Math.max(absDx, absDy) > 10) {
+    let swapId;
+    if (absDx > absDy) {
+      swapId = dx > 0 ? squareIdBeingDragged + 1 : squareIdBeingDragged - 1;
+    } else {
+      swapId = dy > 0 ? squareIdBeingDragged + width : squareIdBeingDragged - width;
+    }
+    if (swapId >= 0 && swapId < width * width) {
+      squareIdBeingReplaced = swapId;
+      colorBeingReplaced = squares[swapId].className;
+      squares[squareIdBeingDragged].className = colorBeingReplaced;
+      squares[squareIdBeingReplaced].className = colorBeingDragged;
+      dragEnd();
+    }
   }
 }
 
@@ -163,64 +198,6 @@ function resolveBoard(cb) {
   loop();
 }
 
-function endGame() {
-  clearInterval(timerInterval);
-  const overlay = document.getElementById('gameOverModal');
-  const result = document.getElementById('resultText');
-
-  let message = '';
-  if (score >= 500) {
-    message = `🎉 <strong>Excellent!</strong>`;
-  } else if (score >= 300) {
-    message = `👍 <strong>Good!</strong>`;
-  } else if (score >= 100) {
-    message = `🙂 <strong>Okay!</strong>`;
-  } else {
-    message = `😕 <strong>Poor!</strong>`;
-  }
-
-  result.innerHTML = `
-    <div>Your score: <strong>${score}</strong></div>
-    <div>${message}</div>
-  `;
-
-  overlay.classList.add('show');
-}
-
-function restartLevel() {
-  window.location.reload();
-}
-
-function setupDrag() {
-  squares.forEach(sq => {
-    sq.addEventListener('dragstart', dragStart);
-    sq.addEventListener('dragover', e => e.preventDefault());
-    sq.addEventListener('dragenter', e => e.preventDefault());
-    sq.addEventListener('drop', dragDrop);
-    sq.addEventListener('dragend', dragEnd);
-  });
-}
-
-function buildValidBoard(maxTries = 100) {
-  for (let attempt = 0; attempt < maxTries; attempt++) {
-    grid.innerHTML = '';
-    squares = [];
-    createBoard();
-    resolveBoard(() => {
-      if (hasPossibleMoves()) {
-        setupDrag();
-        startTimer();
-        const bg = document.getElementById('bg-music');
-        if (bg) bg.play();
-      } else {
-        buildValidBoard();
-      }
-    });
-    return;
-  }
-  endGame();
-}
-
 function hasPossibleMoves() {
   for (let i = 0; i < width * width; i++) {
     const curr = squares[i].className;
@@ -243,6 +220,63 @@ function hasPossibleMoves() {
     }
   }
   return false;
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  const overlay = document.getElementById('gameOverModal');
+  const result = document.getElementById('resultText');
+
+  let message = '';
+  if (score >= 500) {
+    message = `🎉 <strong>Excellent!</strong>`;
+  } else if (score >= 300) {
+    message = `👍 <strong>Good!</strong>`;
+  } else if (score >= 100) {
+    message = `🙂 <strong>Okay!</strong>`;
+  } else {
+    message = `😕 <strong>Poor!</strong>`;
+  }
+
+  result.innerHTML = `
+    <div>Your score: <strong>${score}</strong></div>
+    <div>${message}</div>
+  `;
+  overlay.classList.add('show');
+}
+
+function restartLevel() {
+  window.location.reload();
+}
+
+function setupDrag() {
+  squares.forEach(sq => {
+    sq.addEventListener('dragstart', dragStart);
+    sq.addEventListener('dragover', e => e.preventDefault());
+    sq.addEventListener('dragenter', e => e.preventDefault());
+    sq.addEventListener('drop', dragDrop);
+    sq.addEventListener('dragend', dragEnd);
+    sq.addEventListener('touchstart', handleTouchStart);
+    sq.addEventListener('touchend', handleTouchEnd);
+  });
+}
+
+function buildValidBoard(maxTries = 100) {
+  for (let attempt = 0; attempt < maxTries; attempt++) {
+    grid.innerHTML = '';
+    squares = [];
+    createBoard();
+    resolveBoard(() => {
+      if (hasPossibleMoves()) {
+        setupDrag();
+        startTimer();
+      } else {
+        buildValidBoard();
+      }
+    });
+    return;
+  }
+  endGame();
 }
 
 function startTimer() {
