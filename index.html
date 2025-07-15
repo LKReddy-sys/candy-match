@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candy Match</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="assets/icons/candy-icon-192.png">
+</head>
+<body>
+  <div class="container">
+    <h1>Candy Match</h1>
+    
+    <div class="score-timer">
+      <div class="score">Score: <span id="score">0</span></div>
+    </div>
+
+    <div class="grid"></div>
+
+      <div class="timer" id="time-container">
+        <span id="time-value">60</span> sec
+      </div>
+  </div>
+
+  <!-- Sounds -->
+  <audio id="match-sound" src="assets/sounds/match.mp3" preload="auto"></audio>
+  <audio id="striped-sound" src="assets/sounds/striped.mp3" preload="auto"></audio>
+  <audio id="bomb-sound" src="assets/sounds/bomb.mp3" preload="auto"></audio>
+  <audio id="bg-music" src="assets/sounds/bg.mp3" autoplay loop preload="auto"></audio>
+
+  <!-- Game Over Modal -->
+  <div id="gameOverModal">
+    <div id="resultText"></div>
+    <button onclick="restartLevel()">Play Again</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
