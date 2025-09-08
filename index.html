@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Candy Match</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="assets/icons/candy-icon-192.png">
+
+  <!-- Google tag (gtag.js) - REPLACE the ID below if yours is different -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GZSPR40F6T"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GZSPR40F6T'); /* same ID here */
+  </script>
+
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="container">
+      <a href="#" class="logo">
+        <img src="/assets/logos/pora1-03.png" alt="pora" width="auto" height="70px">
+      </a>
+      
+
+    <h1>Candy Match</h1>
+    <div class="score-timer">
+      <div class="score">Score: <span id="score">0</span></div>
+    </div>
+    <p>Pair same candy three or more</p>
+    <div class="grid"></div>
+    <div class="timer" id="time-container">
+      <span id="time-value">60</span> sec
+    </div>
+  </div>
+
+  <!-- Start Game Modal -->
+  <div id="startModal" class="modal show">
+    <div class="modal-content">
+      <h2>Ready to play?</h2>
+      <button id="startBtn">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Sounds -->
+  <audio id="match-sound" src="assets/sounds/match.mp3" preload="auto"></audio>
+
+  <!-- Game Over Modal -->
+  <div id="gameOverModal">
+    <div id="resultText"></div>
+    <button onclick="restartLevel()">Play Again</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

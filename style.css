@@ -1,0 +1,217 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #1e2f38;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.score-timer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+#score {
+  font-size: 2rem;
+}
+
+.score {
+  font-size: 2rem;
+}
+
+.timer {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: rgb(181, 4, 143);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.timer::before {
+  content: '⏳';
+  font-size: 1.2rem;
+}
+
+.grid {
+  width: 400px;
+  height: 400px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  margin: 10px auto;
+  touch-action: none;
+  transition: filter 0.3s;
+}
+
+.grid.blur {
+  filter: blur(6px) brightness(0.7);
+  pointer-events: none;
+  user-select: none;
+}
+
+.grid div {
+  width: 100%;
+  padding-top: 100%; /* Keeps squares */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.candy-red    { background-image: url('assets/icons/candy-red.png'); }
+.candy-yellow { background-image: url('assets/icons/candy-yellow.png'); }
+.candy-blue   { background-image: url('assets/icons/candy-blue.png'); }
+.candy-green  { background-image: url('assets/icons/candy-green.png'); }
+.candy-purple { background-image: url('assets/icons/candy-purple.png'); }
+.candy-orange { background-image: url('assets/icons/candy-orange.png'); }
+
+.blast {
+  animation: blast 0.3s ease-in-out;
+}
+
+@keyframes blast {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.3; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+.refill {
+  animation: drop 0.3s ease-in-out;
+}
+
+@keyframes drop {
+  from { transform: translateY(-50px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+#gameOverModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  flex-direction: column;
+  color: #fff;
+  text-align: center;
+}
+
+#gameOverModal.show {
+  display: flex;
+}
+
+#gameOverModal button {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  margin-top: 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+#gameOverModal button:hover {
+  background: #0056b3;
+}
+
+#resultText div {
+  margin: 10px 0;
+  font-size: 1.4rem;
+}
+
+/* --- Modal Styles --- */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,30,50,0.8);
+  z-index: 1001;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.modal.show {
+  display: flex;
+}
+.modal-content {
+  background: #fff;
+  color: #222;
+  padding: 2.5rem 2rem 2rem 2rem;
+  border-radius: 18px;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.25);
+  min-width: 260px;
+  text-align: center;
+  max-width: 95vw;
+}
+#startBtn {
+  background: linear-gradient(90deg, #41ff9c 20%, #16d988 80%);
+  color: #222;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: 700;
+  padding: 0.7rem 2.3rem;
+  border-radius: 30px;
+  margin-top: 2rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(40,200,120,0.18);
+}
+#startBtn:hover {
+  background: linear-gradient(90deg, #16d988 10%, #41ff9c 100%);
+}
+
+@media (max-width: 500px) {
+  .grid {
+    width: 320px;
+    height: 320px;
+    gap: 2px;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .score-timer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  #score {
+    font-size: 1.2rem;
+  }
+  .timer {
+    font-size: 1.1rem;
+  }
+  #gameOverModal button {
+    width: 80%;
+  }
+  .modal-content {
+    padding: 2rem 1rem 1.5rem 1rem;
+  }
+}
